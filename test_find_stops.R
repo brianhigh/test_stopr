@@ -3,7 +3,7 @@
 # Filename: test_find_stops.R
 # Copyright (c) Brian High
 # License: MIT https://opensource.org/licenses/MIT (See LICENSE file.)
-# Repository: https://github.com/brianhigh/stopr
+# Repository: https://github.com/brianhigh/test_stopr
 
 # ----- Functions ------
 
