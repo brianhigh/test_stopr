@@ -32,7 +32,7 @@ plot_track_and_stops <- function(data_file = file.path("test_data.csv"),
       lon = c(center_lon - border, center_lon, center_lon + border))
     
     # Create the basemap.
-    bbox <- make_bbox(lon, lat, bbox.df, f = .3)
+    bbox <- make_bbox(lon, lat, bbox.df, f = .4)
     basemap <- get_stamenmap(bbox, zoom = 15, maptype = "toner-lite")
     
     # Create the plot.
