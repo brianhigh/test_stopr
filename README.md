@@ -10,3 +10,5 @@ p
 ```
 
 ![plot of GPS track in orange with stops marked in red](test_data.jpg)
+
+To see the example rendered from an RMarkdown (Rmd) file, see: [test_stopr.md](test_stopr.md).
