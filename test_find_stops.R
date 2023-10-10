@@ -8,7 +8,7 @@
 # ----- Functions ------
 
 plot_track_and_stops <- function(data_file = file.path("test_data.csv"),
-                                 stop_min_secs = 10) {
+                                 stop_threshold_secs = 10) {
   require(readr)      # for read_csv()
   require(scales)     # for rescale()
   require(ggmap)      # for make_bbox() and ggmap()
@@ -21,7 +21,7 @@ plot_track_and_stops <- function(data_file = file.path("test_data.csv"),
     df <- read_csv(data_file)
     
     # Find the stops on the route.
-    stops <- find_stops(df, stop_min_duration_s = stop_min_secs)
+    stops <- find_stops(df, stop_min_duration_s = stop_threshold_secs)
     
     # Prepare a data frame to use for making the bounding box of the basemap.
     center_lat <- mean(range(df$latitude))
@@ -60,7 +60,7 @@ pacman::p_load(here, readr, scales, ggmap)
 
 # Plot map.
 data_file <- here("test_data.csv")
-p <- plot_track_and_stops(data_file, stop_min_secs =45)
+p <- plot_track_and_stops(data_file, stop_threshold_secs = 45)
 
 # Save map.
 png('test_data.jpg', width = 275, height = 400)
