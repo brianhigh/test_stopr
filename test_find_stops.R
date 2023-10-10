@@ -18,7 +18,7 @@ plot_track_and_stops <- function(data_file = file.path("test_data.csv"),
   
   if (file.exists(data_file)) {
     # Import the test data for a route.
-    df <- read_csv(data_file)
+    df <- read_csv(data_file, show_col_types = FALSE)
     
     # Find the stops on the route.
     stops <- find_stops(df, stop_min_duration_s = stop_threshold_secs)
@@ -60,7 +60,7 @@ pacman::p_load(here, readr, scales, ggmap)
 
 # Plot map.
 data_file <- here("test_data.csv")
-p <- plot_track_and_stops(data_file, stop_threshold_secs = 45)
+p <- plot_track_and_stops(data_file, stop_threshold_secs = 60)
 
 # Save map.
 png('test_data.jpg', width = 275, height = 400)
