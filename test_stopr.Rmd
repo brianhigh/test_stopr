@@ -4,6 +4,8 @@ output:
   html_document:
     keep_md: true
 date: "2023-10-10"
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r knitr_setup, include=FALSE}
@@ -15,8 +17,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r setup}
 # Load packages.
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, knitr)
 pacman::p_load_gh("brianhigh/stopr")
-pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, ggmap, knitr)
+pacman::p_load_gh("stadiamaps/ggmap")
+
+# Run a separate script to register the API key to use with Stadia Maps
+# See: https://docs.stadiamaps.com/guides/migrating-from-stamen-map-tiles/
+# register_stadiamaps("YOUR-API-KEY-HERE")
+source(here("reg_api.R"))
 
 # Define variables
 gpx_file <- here("2022-01-01_Morning_Run.gpx")
@@ -65,7 +73,6 @@ border <- 0.005
 bbox.df <- data.frame(
   lat = c(center_lat - border, center_lat, center_lat + border),
   lon = c(center_lon - border, center_lon, center_lon + border))
-
 ```
 
 ## Create base map
@@ -73,7 +80,7 @@ bbox.df <- data.frame(
 ```{r}
 # Create the basemap.
 bbox <- make_bbox(lon, lat, bbox.df, f = .4)
-basemap <- get_stamenmap(bbox, zoom = 15, maptype = "toner-lite")
+basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_terrain")
 ```
 
 ## Create map

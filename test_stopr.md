@@ -4,6 +4,8 @@ output:
   html_document:
     keep_md: true
 date: "2023-10-10"
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -14,8 +16,14 @@ date: "2023-10-10"
 ```r
 # Load packages.
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, knitr)
 pacman::p_load_gh("brianhigh/stopr")
-pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, ggmap, knitr)
+pacman::p_load_gh("stadiamaps/ggmap")
+
+# Run a separate script to register the API key to use with Stadia Maps
+# See: https://docs.stadiamaps.com/guides/migrating-from-stamen-map-tiles/
+# register_stadiamaps("YOUR-API-KEY-HERE")
+source(here("reg_api.R"))
 
 # Define variables
 gpx_file <- here("2022-01-01_Morning_Run.gpx")
@@ -91,11 +99,11 @@ bbox.df <- data.frame(
 ```r
 # Create the basemap.
 bbox <- make_bbox(lon, lat, bbox.df, f = .4)
-basemap <- get_stamenmap(bbox, zoom = 15, maptype = "toner-lite")
+basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_terrain")
 ```
 
 ```
-## ℹ Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
+## ℹ © Stadia Maps © Stamen Design © OpenMapTiles © OpenStreetMap contributors.
 ```
 
 ## Create map
