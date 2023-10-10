@@ -1,0 +1,79 @@
+---
+title: "Test stopr::find_stops()"
+output: 
+  html_document:
+    keep_md: true
+date: "2023-10-10"
+---
+
+```{r knitr_setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup
+
+```{r setup}
+# Load packages.
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load_gh("brianhigh/stopr")
+pacman::p_load(here, readr, scales, ggmap, knitr)
+
+# Define variables
+data_file <- here("test_data.csv")
+stop_threshold_secs = 60
+```
+
+## Load data and find stops
+
+Given a GPS track (coordinates and timestamps), find the stops on the route.
+
+```{r find_stops}
+# Import the test data for a route.
+df <- read_csv(data_file, show_col_types = FALSE)
+
+# Find the stops on the route.
+stops <- find_stops(df, stop_min_duration_s = stop_threshold_secs)
+```
+
+## Show a list of stops
+
+```{r}
+kable(stops)
+```
+
+## Create bounding box for map
+
+```{r}
+# Prepare a data frame to use for making the bounding box of the basemap.
+center_lat <- mean(range(df$latitude))
+center_lon <- mean(range(df$longitude))
+border <- 0.005
+bbox.df <- data.frame(
+  lat = c(center_lat - border, center_lat, center_lat + border),
+  lon = c(center_lon - border, center_lon, center_lon + border))
+
+```
+
+## Create map
+
+```{r}
+# Create the basemap.
+bbox <- make_bbox(lon, lat, bbox.df, f = .4)
+basemap <- get_stamenmap(bbox, zoom = 15, maptype = "toner-lite")
+
+# Create the plot.
+p <- ggmap(basemap) +
+  geom_point(mapping = aes(x = longitude, y = latitude),
+             data = df, color = 'darkorange', size = 1, alpha = 0.7) +
+  geom_point(mapping = aes(x = longitude, y = latitude,
+                           size = log10(rescale(duration) + 1)/2),
+             data = stops, color = 'darkred', alpha = 0.7) +
+  theme_void() + theme(legend.position = "none") +
+  labs(x = NULL, y = NULL, fill = NULL)
+```
+
+## Show map
+
+```{r map, echo=FALSE}
+p
+```
