@@ -15,11 +15,26 @@ date: "2023-10-10"
 # Load packages.
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load_gh("brianhigh/stopr")
-pacman::p_load(here, readr, scales, ggmap, knitr)
+pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, ggmap, knitr)
 
 # Define variables
-data_file <- here("test_data.csv")
+gpx_file <- here("2022-01-01_Morning_Run.gpx")
+csv_file <- here("test_data.csv")
 stop_threshold_secs = 60
+```
+
+## Import GPX file and save as CSV
+
+
+```r
+# Import GPX file.
+df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>% 
+  select(-ele) %>% 
+  rename(longitude = lon, latitude = lat, datetime = time) %>% 
+  mutate(datetime = as_datetime(datetime))
+
+# Save as CSV.
+write_csv(df, csv_file)
 ```
 
 ## Load data and find stops
@@ -29,7 +44,7 @@ Given a GPS track (coordinates and timestamps), find the stops on the route.
 
 ```r
 # Import the test data for a route.
-df <- read_csv(data_file, show_col_types = FALSE)
+df <- read_csv(csv_file, show_col_types = FALSE)
 
 # Find the stops on the route.
 stops <- find_stops(df, stop_min_duration_s = stop_threshold_secs)
@@ -70,7 +85,7 @@ bbox.df <- data.frame(
   lon = c(center_lon - border, center_lon, center_lon + border))
 ```
 
-## Create map
+## Create base map
 
 
 ```r
@@ -82,6 +97,9 @@ basemap <- get_stamenmap(bbox, zoom = 15, maptype = "toner-lite")
 ```
 ## ℹ Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
 ```
+
+## Create map
+
 
 ```r
 # Create the plot.
