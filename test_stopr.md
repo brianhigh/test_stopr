@@ -113,7 +113,7 @@ p <- ggmap(basemap) +
              data = df, color = 'green', size = 1, alpha = 0.5) +
   geom_point(mapping = aes(x = longitude, y = latitude,
                            size = log10(rescale(duration) + 1)/2),
-             data = stops, color = 'magenta', alpha = 0.7) +
+             data = stops, color = 'magenta', alpha = 0.9) +
   theme_void() + theme(legend.position = "none") +
   labs(x = NULL, y = NULL, fill = NULL)
 ```
