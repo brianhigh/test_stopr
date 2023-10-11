@@ -1,14 +1,6 @@
 # test_stopr
 Example of using stopr package
 
-After modifying "import_test_tack_gpx.R" for the filename of the GPX file, if needed, you can create the map with these R commands:
+![plot of GPS track in orange with stops marked in red](test_stopr_files/figure-html/map-1.png)
 
-```
-source("import_test_tack_gpx.R")
-source("test_find_stops.R")
-p
-```
-
-![plot of GPS track in orange with stops marked in red](test_data.jpg)
-
-To see the example rendered from an RMarkdown (Rmd) file, see: [test_stopr.md](test_stopr.md).
+To see the example Rmd rendered from a Markdown (md) file, see: [test_stopr.md](test_stopr.md).
