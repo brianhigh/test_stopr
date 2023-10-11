@@ -27,11 +27,10 @@ source(here("reg_api.R"))
 
 # Define variables
 gpx_file <- system.file("extdata", "test_data.gpx", package = "stopr")
-csv_file <- here("test_data.csv")
 stop_threshold_secs = 20
 ```
 
-## Import GPX file and save as CSV
+## Load data
 
 
 ```r
@@ -41,7 +40,7 @@ df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>%
   mutate(datetime = as_datetime(datetime))
 ```
 
-## Load data and find stops
+## Find stops
 
 Given a GPS track (coordinates and timestamps), find the stops on the route.
 
