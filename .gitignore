@@ -1,3 +1,6 @@
+# Private files
+reg_api.R
+
 # History files
 .Rhistory
 .Rapp.history
