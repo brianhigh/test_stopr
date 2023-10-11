@@ -39,9 +39,6 @@ stop_threshold_secs = 20
 df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>% 
   rename(longitude = lon, latitude = lat, datetime = time) %>% 
   mutate(datetime = as_datetime(datetime))
-
-# Save as CSV
-write_csv(df, csv_file)
 ```
 
 ## Load data and find stops
@@ -50,9 +47,6 @@ Given a GPS track (coordinates and timestamps), find the stops on the route.
 
 
 ```r
-# Import the test data for a route
-df <- read_csv(csv_file, show_col_types = FALSE)
-
 # Find the stops on the route
 stops <- find_stops(df, stop_min_duration_s = stop_threshold_secs)
 ```
