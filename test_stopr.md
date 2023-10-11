@@ -110,7 +110,7 @@ basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_toner_lite")
 # Create the plot
 p <- ggmap(basemap) +
   geom_point(mapping = aes(x = longitude, y = latitude),
-             data = df, color = 'navy', size = 1, alpha = 0.5) +
+             data = df, color = 'green', size = 1, alpha = 0.5) +
   geom_point(mapping = aes(x = longitude, y = latitude,
                            size = log10(rescale(duration) + 1)/2),
              data = stops, color = 'magenta', alpha = 0.7) +
