@@ -87,14 +87,14 @@ border <- 0.005
 bbox.df <- data.frame(
   lat = c(center_lat - border, center_lat, center_lat + border),
   lon = c(center_lon - border, center_lon, center_lon + border))
+bbox <- make_bbox(lon, lat, bbox.df, f = .3)
 ```
 
 ## Create base map
 
 
 ```r
-# Create the basemap
-bbox <- make_bbox(lon, lat, bbox.df, f = .3)
+# Create the basemap from Stadia Map's "Toner Lite" tiles
 basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_toner_lite")
 ```
 
@@ -106,7 +106,7 @@ basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_toner_lite")
 
 
 ```r
-# Create the plot
+# Create the map
 p <- ggmap(basemap) +
   geom_point(mapping = aes(x = longitude, y = latitude),
              data = df, color = 'green', size = 1, alpha = 0.5) +
