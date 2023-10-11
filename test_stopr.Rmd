@@ -27,9 +27,9 @@ pacman::p_load_gh("stadiamaps/ggmap")
 source(here("reg_api.R"))
 
 # Define variables
-gpx_file <- here("2022-01-01_Morning_Run.gpx")
+gpx_file <- system.file("extdata", "test_data.gpx", package = "stopr")
 csv_file <- here("test_data.csv")
-stop_threshold_secs = 45
+stop_threshold_secs = 20
 ```
 
 ## Import GPX file and save as CSV
@@ -37,7 +37,6 @@ stop_threshold_secs = 45
 ```{r}
 # Import GPX file
 df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>% 
-  select(-ele) %>% 
   rename(longitude = lon, latitude = lat, datetime = time) %>% 
   mutate(datetime = as_datetime(datetime))
 
@@ -79,8 +78,8 @@ bbox.df <- data.frame(
 
 ```{r}
 # Create the basemap
-bbox <- make_bbox(lon, lat, bbox.df, f = .4)
-basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_terrain")
+bbox <- make_bbox(lon, lat, bbox.df, f = .3)
+basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_toner_lite")
 ```
 
 ## Create map
@@ -89,7 +88,7 @@ basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_terrain")
 # Create the plot
 p <- ggmap(basemap) +
   geom_point(mapping = aes(x = longitude, y = latitude),
-             data = df, color = 'darkorange', size = 1, alpha = 0.7) +
+             data = df, color = 'darkorange', size = 1, alpha = 0.6) +
   geom_point(mapping = aes(x = longitude, y = latitude,
                            size = log10(rescale(duration) + 1)/2),
              data = stops, color = 'darkred', alpha = 0.7) +
