@@ -36,7 +36,7 @@ stop_threshold_secs = 20
 ```r
 # Import GPX file
 df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>% 
-  rename(longitude = lon, latitude = lat, datetime = time) %>% 
+  select(longitude = lon, latitude = lat, datetime = time) %>% 
   mutate(datetime = as_datetime(datetime))
 ```
 
