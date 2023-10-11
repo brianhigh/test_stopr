@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Setup
 
 ```{r setup}
-# Load packages.
+# Load packages, installing as needed
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
 pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, knitr)
 pacman::p_load_gh("brianhigh/stopr")
@@ -29,19 +29,19 @@ source(here("reg_api.R"))
 # Define variables
 gpx_file <- here("2022-01-01_Morning_Run.gpx")
 csv_file <- here("test_data.csv")
-stop_threshold_secs = 60
+stop_threshold_secs = 45
 ```
 
 ## Import GPX file and save as CSV
 
 ```{r}
-# Import GPX file.
+# Import GPX file
 df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>% 
   select(-ele) %>% 
   rename(longitude = lon, latitude = lat, datetime = time) %>% 
   mutate(datetime = as_datetime(datetime))
 
-# Save as CSV.
+# Save as CSV
 write_csv(df, csv_file)
 ```
 
@@ -50,10 +50,10 @@ write_csv(df, csv_file)
 Given a GPS track (coordinates and timestamps), find the stops on the route.
 
 ```{r find_stops}
-# Import the test data for a route.
+# Import the test data for a route
 df <- read_csv(csv_file, show_col_types = FALSE)
 
-# Find the stops on the route.
+# Find the stops on the route
 stops <- find_stops(df, stop_min_duration_s = stop_threshold_secs)
 ```
 
@@ -66,7 +66,7 @@ kable(stops)
 ## Create bounding box for map
 
 ```{r}
-# Prepare a data frame to use for making the bounding box of the basemap.
+# Prepare a data frame to use for making the bounding box of the basemap
 center_lat <- mean(range(df$latitude))
 center_lon <- mean(range(df$longitude))
 border <- 0.005
@@ -78,7 +78,7 @@ bbox.df <- data.frame(
 ## Create base map
 
 ```{r}
-# Create the basemap.
+# Create the basemap
 bbox <- make_bbox(lon, lat, bbox.df, f = .4)
 basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_terrain")
 ```
@@ -86,7 +86,7 @@ basemap <- get_stadiamap(bbox, zoom = 15, maptype = "stamen_terrain")
 ## Create map
 
 ```{r}
-# Create the plot.
+# Create the plot
 p <- ggmap(basemap) +
   geom_point(mapping = aes(x = longitude, y = latitude),
              data = df, color = 'darkorange', size = 1, alpha = 0.7) +
