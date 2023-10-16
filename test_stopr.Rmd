@@ -39,8 +39,8 @@ map_zoom <- 15
 ```{r load_data}
 # Import GPX file
 df <- st_read(gpx_file, layer = "track_points", quiet = TRUE) %>% 
-   mutate(longitude = st_coordinates(.)[, 'X'],
-         latitude = st_coordinates(.)[, 'Y'],
+  mutate(longitude = st_coordinates(.)[, 'X'], 
+         latitude = st_coordinates(.)[, 'Y'], 
          datetime = as_datetime(time))%>%
   as_tibble() %>% select(longitude, latitude, datetime)
 ```
