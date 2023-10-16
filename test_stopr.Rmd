@@ -3,7 +3,7 @@ title: "Test stopr::find_stops()"
 output: 
   html_document:
     keep_md: true
-date: "2023-10-10"
+date: "2023-10-16"
 editor_options: 
   chunk_output_type: console
 ---
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r setup}
 # Load packages, installing as needed
 if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
-pacman::p_load(here, tibble, plotKML, dplyr, lubridate, readr, scales, knitr)
+pacman::p_load(here, tibble, dplyr, lubridate, readr, scales, sf, knitr)
 pacman::p_load_gh("brianhigh/stopr")
 pacman::p_load_gh("stadiamaps/ggmap")
 
@@ -38,9 +38,11 @@ map_zoom <- 15
 
 ```{r load_data}
 # Import GPX file
-df <- as_tibble(readGPX(gpx_file)$tracks[[1]][[1]]) %>% 
-  select(longitude = lon, latitude = lat, datetime = time) %>% 
-  mutate(datetime = as_datetime(datetime))
+df <- st_read(gpx_file, layer = "track_points", quiet = TRUE) %>% 
+   mutate(longitude = st_coordinates(.)[,1],
+         latitude = st_coordinates(.)[,2],
+         datetime = as_datetime(time))%>%
+  as_tibble() %>% select(longitude, latitude, datetime)
 ```
 
 ## Find stops
@@ -84,10 +86,10 @@ basemap <- get_stadiamap(bbox, zoom = map_zoom, maptype = "stamen_toner_lite")
 # Create the map
 p <- ggmap(basemap) +
   geom_point(mapping = aes(x = longitude, y = latitude),
-             data = df, color = 'green', size = 1, alpha = 0.4) +
+             data = df, color = 'orange', size = 1, alpha = 0.6) +
   geom_point(mapping = aes(x = longitude, y = latitude,
                            size = log10(rescale(duration) + 1)/2),
-             data = stops, color = 'magenta', alpha = 0.9) +
+             data = stops, color = 'darkred', alpha = 0.9) +
   theme_void() + theme(legend.position = "none") +
   labs(x = NULL, y = NULL, fill = NULL)
 ```
